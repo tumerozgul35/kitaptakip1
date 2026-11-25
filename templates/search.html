@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Arama - Kitap Takip{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Arama sonuçları{% if query %}: {{ query }}{% endif %}</h1>
+{% if search_error %}
+<div class="alert alert-warning">
+  {{ search_error }}
+</div>
+{% include "_manual_form.html" %}
+{% endif %}
+<div class="book-grid search-grid">
+  {% set missing_pages = namespace(value=false) %}
+  {% for book in results %}
+  {% if not book.total_pages %}{% set missing_pages.value = true %}{% endif %}
+  <article class="book-card card">
+    <img class="book-cover" src="{{ book.cover_url or url_for('static', filename='kapaklar/default.svg') }}" alt="{{ book.title }}">
+    <div class="card-body">
+      <h2 class="h6">{{ book.title }}</h2>
+      <p class="text-secondary small">{{ book.author or 'Yazar belirtilmemiş' }}</p>
+      {% if book.publisher %}<p class="text-secondary small">{{ book.publisher }}</p>{% endif %}
+      <form method="post" action="{{ url_for('add_book') }}" class="shelf-actions">
+        <input type="hidden" name="title" value="{{ book.title }}">
+        <input type="hidden" name="author" value="{{ book.author }}">
+        <input type="hidden" name="publisher" value="{{ book.publisher }}">
+        <input type="hidden" name="url" value="{{ book.url }}">
+        <input type="hidden" name="cover_url" value="{{ book.cover_url }}">
+        <input type="hidden" name="download_cover" value="1">
+        <input type="hidden" name="total_pages" value="{{ book.total_pages }}">
+        <input type="hidden" name="isbn" value="{{ book.isbn }}">
+        <input type="hidden" name="publication_year" value="{{ book.publication_year }}">
+        {% if book.total_pages %}
+          {% for shelf in ('Okunacak','Okunuyor','Okundu') %}
+          <button class="btn btn-sm btn-outline-primary" name="shelf" value="{{ shelf }}">{{ shelf }}</button>
+          {% endfor %}
+        {% else %}
+        <span class="text-secondary small">Sayfa sayısı gelmedi; elle ekleyin.</span>
+        {% endif %}
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% if missing_pages.value %}
+{% include "_manual_form.html" %}
+{% endif %}
+{% endblock %}

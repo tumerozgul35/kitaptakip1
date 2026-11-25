@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}İstatistik - Kitap Takip{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">İstatistik</h1>
+<div class="card mb-4"><div class="card-body">
+  <h2 class="h5">Yıllık hedef</h2>
+  <p class="mb-0">{{ target_status }}</p>
+  <p class="text-secondary mb-0">Okuma serisi: {{ streak }} gün</p>
+</div></div>
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">Aylık ilerleme</h2>
+    <canvas id="monthlyChart"></canvas>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById("monthlyChart"), {
+  type: "bar",
+  data: {
+    labels: ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"],
+    datasets: [{ label: "Kayıtlı sayfa", data: {{ monthly | tojson }}, backgroundColor: "#EC691F" }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } } }
+});
+</script>
+{% endblock %}

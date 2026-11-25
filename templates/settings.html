@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Ayarlar - Kitap Takip{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Ayarlar</h1>
+<div class="card settings-card">
+  <div class="card-body">
+    <form method="post">
+      <label class="form-label" for="annual_goal">Yıllık kitap hedefi</label>
+      <input class="form-control mb-3" id="annual_goal" name="annual_goal" type="number" min="1" value="{{ annual_goal }}">
+      <button class="btn btn-primary">Kaydet</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
